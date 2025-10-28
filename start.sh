@@ -40,11 +40,10 @@ if lsof -i:$BACKEND_PORT >/dev/null 2>&1; then
 fi
 
 echo -e "${YELLOW}>>> Step 2. 启动后端服务 (Uvicorn)...${RESET}"
-cd backend || cd .
-nohup uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload > ../backend.log 2>&1 &
+(cd backend && nohup uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload > ../backend.log 2>&1 &)
 BACK_PID=$!
-echo -e "${GREEN}✅ 后端已启动 (PID: $BACK_PID)，日志写入 backend.log${RESET}"
-cd ..
+sleep 2
+echo -e "${GREEN}✅ 后端已启动，日志写入 backend.log${RESET}"
 
 # 3️⃣ 启动前端服务
 FRONTEND_PORT=3000
@@ -54,11 +53,17 @@ if lsof -i:$FRONTEND_PORT >/dev/null 2>&1; then
 fi
 
 echo -e "${YELLOW}>>> Step 3. 启动前端服务 (Vite)...${RESET}"
-cd frontend
-nohup npm run dev -- --host > ../frontend.log 2>&1 &
+
+# 检查 node_modules 是否安装
+if [ ! -d "frontend/node_modules" ]; then
+    echo -e "${YELLOW}⚠️  前端依赖未安装，正在安装...${RESET}"
+    (cd frontend && npm install)
+fi
+
+(cd frontend && nohup npx vite --host > ../frontend.log 2>&1 &)
 FRONT_PID=$!
-echo -e "${GREEN}✅ 前端已启动 (PID: $FRONT_PID)，日志写入 frontend.log${RESET}"
-cd ..
+sleep 2
+echo -e "${GREEN}✅ 前端已启动，日志写入 frontend.log${RESET}"
 
 # 4️⃣ 启动完成信息
 echo -e "${GREEN}============================================================${RESET}"

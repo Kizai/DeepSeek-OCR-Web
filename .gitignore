@@ -1,0 +1,39 @@
+# 日志文件
+*.log
+backend.log
+frontend.log
+setup.log
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 环境和配置文件
+.env
+.env.local
+
+# Node.js
+frontend/node_modules/
+frontend/package-lock.json
+
+# 工作区和结果
+workspace/
+
+# 临时文件和编辑器
+.DS_Store
+*.swp
+*.swo
+*~
+
+# 模型和大型文件
+deepseek-ocr/
+packages/*.whl
+packages/*.tar.xz
+
+# IDE
+.vscode/
+.idea/
+
